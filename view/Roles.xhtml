@@ -1,0 +1,109 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Roles Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{rolesHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="roleName" template="layout/display.xhtml">
+            <ui:define name="label">Role name</ui:define>
+            <h:outputText value="#{rolesHome.instance.roleName}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RolesEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty rolesFrom ? 'RolesList' : rolesFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Userses</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="usersesChildren">
+
+        <h:outputText value="There are no userses associated with this roles."
+                   rendered="#{empty rolesHome.userses}"/>
+
+        <rich:dataTable value="#{rolesHome.userses}"
+                       var="_users"
+                  rendered="#{not empty rolesHome.userses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="usersesTable">
+            <rich:column sortBy="#{_users.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_users.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_users.name}">
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_users.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_users.password}">
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_users.password}"/>
+            </rich:column>
+            <rich:column sortBy="#{_users.phoneNumber}">
+                <f:facet name="header">Phone number</f:facet>
+                <h:outputText value="#{_users.phoneNumber}"/>
+            </rich:column>
+            <rich:column sortBy="#{_users.professional}">
+                <f:facet name="header">Professional</f:facet>
+                <h:outputText value="#{_users.professional}"/>
+            </rich:column>
+            <rich:column sortBy="#{_users.userImage}">
+                <f:facet name="header">User image</f:facet>
+                <h:outputText value="#{_users.userImage}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectusers"
+                     value="Select"
+                      view="/Users.xhtml">
+                    <f:param name="usersId"
+                            value="#{_users.id}"/>
+                    <f:param name="usersFrom" value="Roles"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add users"
+                view="/UsersEdit.xhtml">
+            <f:param name="rolesId"
+                    value="#{rolesHome.instance.id}"/>
+            <f:param name="usersFrom" value="Roles"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

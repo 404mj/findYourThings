@@ -1,0 +1,279 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="head">
+		<style>
+<!--
+.datalist {
+	border: 1px solid #0058a3;
+	font-family: Arial;
+	border-collapse: collapse;
+	background-color: white;
+	font-size: 14px;
+}
+
+.datalist th {
+	border: 1px solid #0058a3;
+	background-color: #ACBECE;
+	color: #FFFFFF;
+	font-weight: bold;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 12px;
+	padding-right: 12px;
+	text-align: center;
+}
+
+.datalist td {
+	border: 1px solid #0058a3;
+	text-align: left;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.datalist tr:hover,.datalist tr.altrow {
+	background-color: #c4e4ff;
+}
+-->
+</style>
+	</ui:define>
+
+	<ui:define name="body">
+		<!-- 搜索开始 -->
+		<h:form id="messagessSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="搜索查询" switchType="ajax">
+
+				<table>
+					<tr>
+						<td><h:outputLabel value="失物类别:" />&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td><h:selectOneMenu
+								value="#{messagessList.messagess.messageSort.id}">
+								<f:selectItem itemValue="" itemLabel="请选择"/>
+								<c:forEach items="#{messageSortList.resultList}" var="_m">
+
+									<f:selectItem itemValue="#{_m.id}" itemLabel="#{_m.messort}" />
+								</c:forEach>
+
+							</h:selectOneMenu></td>
+
+						<td><h:outputLabel value="消息类型:" />&nbsp;&nbsp;&nbsp;&nbsp;</td>
+						<td><h:selectOneMenu value="#{messagessList.messagess.type}">
+						        <f:selectItem itemValue="" itemLabel="请选择"/>
+								<f:selectItem itemValue="丢东西" itemLabel="丢东西" />
+								<f:selectItem itemValue="找失主" itemLabel="找失主" />
+							</h:selectOneMenu></td>
+
+						<td><h:outputLabel value="起始时间" /></td>
+						<td><rich:calendar value="#{messagessList.timeBegin}"
+								datePattern="yyyy-MM-dd hh:mm" locale="zh_CN" /></td>
+
+						<td><h:outputLabel value="结束时间" /></td>
+						<td><rich:calendar value="#{messagessList.timeEnd}"
+								datePattern="yyyy-MM-dd hh:mm" locale="zh_CN" /></td>
+
+
+						<td><h:outputLabel value="丢失地点:" /></td>
+						<td><h:inputText id="palce"
+								value="#{messagessList.messagess.palce}" /></td>
+
+						<td><h:outputLabel value="详细消息:" /></td>
+						<td><h:inputText id="text"
+								value="#{messagessList.messagess.text}" style="width:300px" /></td>
+					</tr>
+				</table>
+
+
+				<h:selectOneRadio id="logic"
+					value="#{messagessList.restrictionLogicOperator}"
+					styleClass="radio">
+					<f:selectItem itemLabel="满足所有项" itemValue="and" />
+					<f:selectItem itemLabel="满足任一项" itemValue="or" />
+				</h:selectOneRadio>
+
+
+			</rich:simpleTogglePanel>
+
+			<div class="actionButtons">
+				<h:commandButton id="search" value="查询"
+					action="/MessagessList.xhtml" />
+				<s:button id="reset" value="返回" includePageParams="false" />
+			</div>
+
+		</h:form>
+
+		<!-- 搜索结束 -->
+
+		<rich:panel>
+			<f:facet name="header">查询结果 (#{empty messagessList.resultList ? 0 : (messagessList.paginated ? messagessList.resultCount : messagessList.resultList.size)})</f:facet>
+			<div class="results" id="messagessList">
+
+				<h:outputText value="亲！没有找到您搜索的东西，可以到别的地方转转"
+					rendered="#{empty messagessList.resultList}" />
+
+
+				<table class="datalist" width="100%">
+					<tr>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="ID" />
+								<ui:param name="propertyPath" value="messagess.id" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="发布者名片(点击排序)" />
+								<ui:param name="propertyPath" value="messagess.users.id" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="失物类别" />
+								<ui:param name="propertyPath" value="messagess.messageSort.id" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="失物图片" />
+								<ui:param name="propertyPath" value="messagess.image" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="丢捡地点" />
+								<ui:param name="propertyPath" value="messagess.palce" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="招领" />
+								<ui:param name="propertyPath" value="messagess.status" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="详细消息" />
+								<ui:param name="propertyPath" value="messagess.text" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="消息类型" />
+								<ui:param name="propertyPath" value="messagess.type" />
+							</ui:include></th>
+						<th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messagessList}" />
+								<ui:param name="propertyLabel" value="发布时间" />
+								<ui:param name="propertyPath" value="messagess.time" />
+							</ui:include></th>
+
+
+					</tr>
+
+					<ui:repeat var="_messagess" value="#{messagessList.resultList}"
+						rendered="#{not empty messagessList.resultList}">
+
+						<s:fragment rendered="#{_messagess.status.charAt(0)=='未'}">
+							<tr>
+
+								<td><h:outputText value="#{_messagess.id}" /></td>
+
+								<td style="padding-left: 0px;">
+									<table border="0" cellspacing="0" cellpadding="0"
+										style="border-style: none">
+										<tr style="border-style: none">
+											<td style="border-style: none"><img
+												src="avator.showing?usersId=#{_messagess.users.id}"
+												height="100" width="100" id="picture" /> <br /></td>
+											<td style="border-style: none"><span
+												style="color: green">姓名：</span> <ui:remove><h:outputText
+													value="#{_messagess.users.name}" /> </ui:remove>
+                                                 <s:link view="/MainSelfHome.xhtml"
+							value="#{_messagess.users.name}"
+							id="userViewId"
+							
+							style="text-decoration:none">
+						
+							
+							<f:param name="usersId" value="#{_messagess.users.id}"/>
+							<f:param name="withUserName" value="#{_messagess.users.name}"/>
+							
+						</s:link>
+													<br /> <span
+												style="color: green">学院：</span> <h:outputText
+													value="#{_messagess.users.college.collegeName}" /> <br />
+												<span style="color: green">专业：</span> <h:outputText
+													value="#{_messagess.users.professional}" /> <br /> <span
+												style="color: green">手机号：</span> <h:outputText
+													value="#{_messagess.users.phoneNumber}" /></td>
+
+										</tr>
+									</table>
+
+								</td>
+								<td><h:outputText value="#{_messagess.messageSort.messort}" /></td>
+								<td style=""><img
+									src="avator.showimg?messagessId=#{_messagess.id}" height="150"
+									id="picture" style="magin-right: 0px;" /></td>
+								<td><h:outputText value="#{_messagess.palce}" /></td>
+								<td><h:outputText value="#{_messagess.status}" /></td>
+								<td><s:link
+										view="/#{empty from ? 'Messagess' : from}.xhtml"
+										value="#{_messagess.text}" id="messagessViewId"
+										propagation="none"
+										style="text-decoration:none"
+										action="#{messagessList.updateCount()}">
+
+										<f:param name="messagessId" value="#{_messagess.id}" />
+										<f:param name="usersId" value="#{usersList.makeId().id}" />
+                                        <f:param name="messageId" value="#{_messagess.id}"/>
+                                      
+
+									</s:link></td>
+								<td><h:outputText value="#{_messagess.type}" /></td>
+								<td><h:outputText value="#{_messagess.time}">
+										<s:convertDateTime pattern="yyyy-MM-dd HH:mm:ss" type="both" />
+									</h:outputText></td>
+
+							</tr>
+						</s:fragment>
+
+
+					</ui:repeat>
+				</table>
+			</div>
+		</rich:panel>
+
+		<div class="tableControl">
+
+			<s:link view="/MessagessList.xhtml"
+				rendered="#{messagessList.previousExists}"
+				value="#{messages.left}#{messages.left} 首页" id="firstPage">
+				<f:param name="firstResult" value="0" />
+			</s:link>
+
+			<s:link view="/MessagessList.xhtml"
+				rendered="#{messagessList.previousExists}"
+				value="#{messages.left} 上一页" id="previousPage">
+				<f:param name="firstResult"
+					value="#{messagessList.previousFirstResult}" />
+			</s:link>
+
+			<s:link view="/MessagessList.xhtml"
+				rendered="#{messagessList.nextExists}" value="下一页 #{messages.right}"
+				id="nextPage">
+				<f:param name="firstResult" value="#{messagessList.nextFirstResult}" />
+			</s:link>
+
+			<s:link view="/MessagessList.xhtml"
+				rendered="#{messagessList.nextExists}"
+				value="尾页 #{messages.right}#{messages.right}" id="lastPage">
+				<f:param name="firstResult" value="#{messagessList.lastFirstResult}" />
+			</s:link>
+
+		</div>
+	</ui:define>
+</ui:composition>

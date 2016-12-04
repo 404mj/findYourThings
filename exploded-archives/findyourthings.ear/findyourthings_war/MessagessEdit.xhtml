@@ -1,0 +1,147 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="messagess" styleClass="edit" enctype="multipart/form-data">
+
+        <rich:panel>
+            <f:facet name="header">#{messagessHome.managed ? '编辑' : '添加'} 信息</f:facet>
+            <ui:remove>      
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{messagessHome.managed}"
+                          value="#{messagessHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            </ui:remove>
+            <s:decorate id="textField" template="layout/edit.xhtml">
+                <ui:define name="label">详细消息</ui:define>
+                <h:inputTextarea id="text"
+                               cols="80"
+                               rows="3"
+                              value="#{messagessHome.instance.text}"/>
+            </s:decorate>
+            
+            <s:decorate id="palceField" template="layout/edit.xhtml">
+                <ui:define name="label">丢捡地点</ui:define>
+                <h:inputText id="palce"
+                           size="50"
+                      maxlength="50"
+                          value="#{messagessHome.instance.palce}">
+                    <a:support event="onblur" reRender="palceField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+        
+            <s:decorate id="imageField" template="layout/edit.xhtml">
+                <ui:define name="label">失物图片</ui:define>
+                <img src="avator.showimg?messagessId=#{messagessHome.instance.id}"
+										height="150" id="picture" />
+									<s:fileUpload data="#{messagessHome.instance.image}"/>
+            </s:decorate>
+                
+                    <a:support event="onblur" reRender="imageField" bypassUpdates="true" ajaxSingle="true"/>
+  
+	
+          <ui:remove>
+            <s:decorate id="statusField" template="layout/edit.xhtml">
+                <ui:define name="label">Status</ui:define>
+                <h:selectBooleanCheckbox id="status"
+                                      value="#{messagessHome.instance.status}"/>
+            </s:decorate>
+          
+     
+            <s:decorate id="timeField" template="layout/edit.xhtml">
+                <ui:define name="label">Time</ui:define>
+                <rich:calendar  id="time"
+                  datePattern="yyyy-MM-dd HH:mm"
+                          value="#{messagessHome.instance.time}">
+                    <s:convertDateTime type="time"/>
+                    <a:support event="onblur" reRender="timeField" bypassUpdates="true" ajaxSingle="true"/>
+                </rich:calendar>
+            </s:decorate>
+            </ui:remove>
+            
+            <s:decorate id="messageSortField" template="layout/edit.xhtml">
+                <ui:define name="label">失物类别</ui:define>
+                <h:selectOneMenu value="#{messagessHome.instance.messageSort}">
+                   <c:forEach items="#{messageSortList.resultList}" var="_m">
+                        <f:selectItem itemValue="#{_m}" itemLabel="#{_m.messort}"/>
+                   </c:forEach>
+                   <s:convertEntity></s:convertEntity>
+                </h:selectOneMenu>
+                
+            </s:decorate>
+
+            <s:decorate id="typeField" template="layout/edit.xhtml">
+                <ui:define name="label">消息类型</ui:define>
+                <h:selectOneMenu value="#{messagessHome.instance.type}">
+                   <f:selectItem itemValue="丢东西" itemLabel="丢东西"/>
+                   <f:selectItem itemValue="找失主" itemLabel="找失主"/>
+                </h:selectOneMenu>
+                
+            </s:decorate>
+
+
+            <div style="clear:both">
+               带 <span class="required">*</span>
+                为必填项
+            </div>
+
+        </rich:panel>
+
+
+        
+        <div class="actionButtons">
+        <rich:panel rendered="#{usersHome.managed}">
+         
+            <h:commandButton id="save"
+                          value="保存"
+                         action="#{messagessHome.persist}"
+                         rendered="#{!messagessHome.managed}"
+                       />
+
+            <h:commandButton id="update"
+                          value="保存"
+                         action="#{messagessHome.update}"
+                         rendered="#{messagessHome.managed}"
+                       />
+            <h:commandButton id="delete"
+                          value="删除"
+                         action="#{messagessHome.remove}"
+                      immediate="true"
+                       rendered="#{messagessHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="取消"
+             propagation="end"
+                    view="/MainSelfHome.xhtml"
+                rendered="#{messagessHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="取消"
+             propagation="end"
+                    view="/MainSelfHome.xhtml"
+                rendered="#{!messagessHome.managed}"/>
+           
+            </rich:panel>
+        </div>
+    </h:form>
+
+
+</ui:define>
+
+</ui:composition>

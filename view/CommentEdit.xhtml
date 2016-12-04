@@ -1,0 +1,172 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="comment" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{commentHome.managed ? '编辑' : '添加'} 评论或者私密留言</f:facet>
+
+             <ui:remove>
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{commentHome.managed}"
+                          value="#{commentHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            </ui:remove>
+
+
+            <s:decorate id="commentContentField" template="layout/edit.xhtml">
+                <ui:define name="label">评论或留言内容</ui:define>
+                <h:inputTextarea id="commentContent"
+                               cols="80"
+                               rows="3"
+                              value="#{commentHome.instance.commentContent}"/>
+            </s:decorate>
+
+
+
+            <s:decorate id="showContentField" template="layout/edit.xhtml">
+                <ui:define name="label">私密留言</ui:define>
+                <h:selectBooleanCheckbox id="showContent"
+                                      value="#{commentHome.instance.showContent}"/>
+            </s:decorate>
+
+            <div style="clear:both">
+              带  <span class="required">*</span>
+               为必填项
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="评论或私密留言"
+                         action="#{commentHome.persist}"
+                       disabled="#{!commentHome.wired}"
+                       rendered="#{!commentHome.managed}"/>
+           <ui:remove>
+           <s:button id="savebutton" value="保存" action="#{commentHome.persist}" view="/Messagess.xhtml" propagation="end"/>
+           </ui:remove>
+
+            <h:commandButton id="update"
+                          value="保存"
+                         action="#{commentHome.update}"
+                       rendered="#{commentHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="删除"
+                         action="#{commentHome.remove}"
+                      immediate="true"
+                       rendered="#{commentHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="取消"
+             propagation="end"
+                    view="/Comment.xhtml"
+                rendered="#{commentHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="取消"
+             propagation="end"
+                    view="/#{empty commentFrom ? 'CommentList' : commentFrom}.xhtml"
+                rendered="#{!commentHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="失物详细信息 *" labelClass="required">
+    <div class="association" id="messagessParent">
+
+        <h:outputText value="亲，没有与该评论的相关的信息."
+                   rendered="#{commentHome.instance.messagess == null}"/>
+
+        <rich:dataTable var="_messagess"
+                   value="#{commentHome.instance.messagess}"
+                rendered="#{commentHome.instance.messagess != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="messagessTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_messagess.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">失物图片</f:facet>
+                <img src="avator.showimg?messagessId=#{_messagess.id}"
+										height="150" id="picture" />
+            </h:column>
+            
+            <ui:remove>
+            <h:column>
+                <f:facet name="header">Message sort id</f:facet>
+                <h:outputText value="#{_messagess.messageSort.id}"/>
+            </h:column>
+            </ui:remove>
+            
+            <h:column>
+                <f:facet name="header">丢失地点</f:facet>
+                <h:outputText value="#{_messagess.palce}"/>
+            </h:column>
+            <ui:remove>
+            <h:column>
+                <f:facet name="header">Place</f:facet>
+                <h:outputText value="#{_messagess.place}"/>
+            </h:column>
+            </ui:remove>
+            <h:column>
+                <f:facet name="header">招领状态</f:facet>
+                <h:outputText value="#{_messagess.status}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">详细信息</f:facet>
+                <h:outputText value="#{_messagess.text}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">发布时间</f:facet>
+                <h:outputText value="#{_messagess.time}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">消息类别</f:facet>
+                <h:outputText value="#{_messagess.type}"/>
+            </h:column>
+            <ui:remove>
+            <h:column>
+                <f:facet name="header">Users id</f:facet>
+                <h:outputText value="#{_messagess.users.id}"/>
+            </h:column>
+            </ui:remove>
+        </rich:dataTable>
+        
+        <s:fragment rendered="false">
+        <div class="actionButtons">
+            <s:button id="#{commentHome.instance.messagess != null ? 'changeParent' : 'selectParent'}" value="#{commentHome.instance.messagess != null ? 'Change' : 'Select'} messagess"
+                       view="/MessagessList.xhtml">
+                <f:param name="from" value="CommentEdit"/>
+            </s:button>
+        </div>
+        </s:fragment>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

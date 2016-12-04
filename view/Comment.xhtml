@@ -1,0 +1,129 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Comment Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{commentHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="commentContent" template="layout/display.xhtml">
+            <ui:define name="label">Comment content</ui:define>
+            <h:outputText value="#{commentHome.instance.commentContent}"/>
+        </s:decorate>
+
+        <s:decorate id="showContent" template="layout/display.xhtml">
+            <ui:define name="label">Show content</ui:define>
+            <h:outputText value="#{commentHome.instance.showContent}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/CommentEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+       <ui:remove>
+        <s:button view="/#{empty commentFrom ? 'CommentList' : commentFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+                 </ui:remove>
+                 
+          <s:button view="/Messagess.xhtml"
+                    id="done"
+                 value="done"
+                 propagation="end"/>      
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Messagess</h:panelGroup>
+        </f:facet>
+    <div class="association" id="messagessParent">
+
+        <h:outputText value="There is no messagess associated with this comment."
+                   rendered="#{commentHome.instance.messagess == null}"/>
+
+        <rich:dataTable var="_messagess"
+                   value="#{commentHome.instance.messagess}"
+                rendered="#{commentHome.instance.messagess != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="messagessTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_messagess.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Image</f:facet>
+                <h:outputText value="#{_messagess.image}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Message sort id</f:facet>
+                <h:outputText value="#{_messagess.messageSort.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Palce</f:facet>
+                <h:outputText value="#{_messagess.palce}"/>
+            </h:column>
+            <ui:remove>
+            <h:column>
+                <f:facet name="header">Place</f:facet>
+                <h:outputText value="#{_messagess.place}"/>
+            </h:column>
+            </ui:remove>
+            <h:column>
+                <f:facet name="header">Status</f:facet>
+                <h:outputText value="#{_messagess.status}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Text</f:facet>
+                <h:outputText value="#{_messagess.text}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Time</f:facet>
+                <h:outputText value="#{_messagess.time}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Type</f:facet>
+                <h:outputText value="#{_messagess.type}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Users id</f:facet>
+                <h:outputText value="#{_messagess.users.id}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewmessagess"
+                     value="View"
+                      view="/Messagess.xhtml">
+                    <f:param name="messagessId"
+                           value="#{_messagess.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

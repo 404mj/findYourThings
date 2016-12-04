@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+	<param name="firstResult" value="#{messagessList.firstResult}" />
+	<param name="sort" value="#{messagessList.orderColumn}" />
+	<param name="dir" value="#{messagessList.orderDirection}" />
+	<param name="logic" value="#{messagessList.restrictionLogicOperator}" />
+
+	<param name="from" />
+	<param name="palce" value="#{messagessList.messagess.palce}" />
+	<param name="text" value="#{messagessList.messagess.text}" />
+	<param name="type" value="#{messagessList.messagess.type}" />
+	<param name="sortId" value="#{messagessList.messagess.messageSort.id}" />
+	<param name="timeBegin" value="#{messagessList.messagess.timeBegin}" />
+	<param name="timeEnd" value="#{messagessList.messagess.timeEnd}" />
+
+</page>

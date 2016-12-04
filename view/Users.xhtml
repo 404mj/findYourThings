@@ -1,0 +1,230 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">用户详细信息</f:facet>
+        <ui:remove>
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">id:</ui:define>
+            <h:outputText value="#{usersHome.instance.id}"/>
+        </s:decorate>
+        </ui:remove>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">姓名：</ui:define>
+            <h:outputText value="#{usersHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="password" template="layout/display.xhtml">
+            <ui:define name="label">密码：</ui:define>
+            <h:outputText value="#{usersHome.instance.password}"/>
+        </s:decorate>
+
+        <s:decorate id="phoneNumber" template="layout/display.xhtml">
+            <ui:define name="label">手机号：</ui:define>
+            <h:outputText value="#{usersHome.instance.phoneNumber}"/>
+        </s:decorate>
+        
+        <s:decorate id="college" template="layout/display.xhtml">
+            <ui:define name="label">学院：</ui:define>
+            <h:outputText value="#{usersHome.instance.college.collegeName}"/>
+        </s:decorate>
+
+        <s:decorate id="professional" template="layout/display.xhtml">
+            <ui:define name="label">专业：</ui:define>
+            <h:outputText value="#{usersHome.instance.professional}"/>
+        </s:decorate>
+        
+        
+        <s:decorate id="userImage" template="layout/display.xhtml">
+            <ui:define name="label">用户头像：</ui:define>
+            <img src="avator.showing?usersId=#{usersHome.instance.id}"
+                                        height="100" width="100" id="picture" />
+        </s:decorate>
+       
+        
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/UsersEdit.xhtml"
+                    id="edit"
+                 value="重新编辑"/>
+
+        <s:button view="/MainSelfHome.xhtml"
+                    id="done"
+                 value="确认完成">
+          <f:param name="withUserName" value="#{usersList.makeId().name}"/>   
+        </s:button>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+   <ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>College</h:panelGroup>
+        </f:facet>
+    <div class="association" id="collegeParent">
+
+        <h:outputText value="There is no college associated with this users."
+                   rendered="#{usersHome.instance.college == null}"/>
+
+        <rich:dataTable var="_college"
+                   value="#{usersHome.instance.college}"
+                rendered="#{usersHome.instance.college != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="collegeTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_college.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">College name</f:facet>
+                <h:outputText value="#{_college.collegeName}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewcollege"
+                     value="View"
+                      view="/College.xhtml">
+                    <f:param name="collegeId"
+                           value="#{_college.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>详细信息>></h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="messagessesChildren">
+
+        <h:outputText value="亲！您还没有发表过信息，赶快试试吧！"
+                   rendered="#{empty usersHome.messagesses}"/>
+
+        <rich:dataTable value="#{usersHome.messagesses}"
+                       var="_messagess"
+                  rendered="#{not empty usersHome.messagesses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="messagessesTable">
+                        <ui:remove>
+            <rich:column sortBy="#{_messagess.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_messagess.id}"/>
+            </rich:column>
+            </ui:remove>
+            
+            <rich:column sortBy="#{_messagess.type}">
+                <f:facet name="header">消息类型</f:facet>
+                <h:outputText value="#{_messagess.type}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_messagess.image}">
+                <f:facet name="header">失物图片</f:facet>
+                <img src="avator.showimg?messagessId=#{_messagess.id}"
+										height="150" id="picture" />
+            </rich:column>
+            <rich:column sortBy="#{_messagess.text}">
+                <f:facet name="header">详细信息</f:facet>
+                <h:outputText value="#{_messagess.text}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_messagess.palce}">
+                <f:facet name="header">丢捡地点</f:facet>
+                <h:outputText value="#{_messagess.palce}"/>
+            </rich:column>
+            
+            <ui:remove>
+            <rich:column sortBy="#{_messagess.status}">
+                <f:facet name="header">招领</f:facet>
+                <h:outputText value="#{_messagess.status}"/>
+            </rich:column>
+            </ui:remove>
+            
+            <rich:column sortBy="#{_messagess.time}">
+                <f:facet name="header">发布时间</f:facet>
+                <h:outputText value="#{_messagess.time}">
+                    <s:convertDateTime type="time"/>
+                </h:outputText>
+            </rich:column>
+            
+            <h:column>
+                <f:facet name="header">操作</f:facet>
+                <s:link id="selectmessagess"
+                     value="查看详细信息"
+                      view="/Messagess.xhtml">
+                    <f:param name="messagessId"
+                            value="#{_messagess.id}"/>
+                    <f:param name="messagessFrom" value="Users"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="发布信息"
+                view="/MessagessEdit.xhtml">
+            <f:param name="usersId"
+                    value="#{usersHome.instance.id}"/>
+            <f:param name="messagessFrom" value="Users"/>
+        </s:button>
+    </div>
+    </rich:tab>
+<ui:remove>
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Roles</h:panelGroup>
+        </f:facet>
+    <div class="association" id="rolesParent">
+
+        <h:outputText value="There is no roles associated with this users."
+                   rendered="#{usersHome.instance.roles == null}"/>
+
+        <rich:dataTable var="_roles"
+                   value="#{usersHome.instance.roles}"
+                rendered="#{usersHome.instance.roles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Role name</f:facet>
+                <h:outputText value="#{_roles.roleName}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewroles"
+                     value="View"
+                      view="/Roles.xhtml">
+                    <f:param name="rolesId"
+                           value="#{_roles.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+    </ui:remove>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

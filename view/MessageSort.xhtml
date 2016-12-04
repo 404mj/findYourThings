@@ -1,0 +1,139 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">失物类别详细信息</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">编号：</ui:define>
+            <h:outputText value="#{messageSortHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="messort" template="layout/display.xhtml">
+            <ui:define name="label">失物类别：</ui:define>
+            <h:outputText value="#{messageSortHome.instance.messort}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+    
+    <ui:remove>
+    <div class="actionButtons">
+
+        <s:button view="/MessageSortEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty messageSortFrom ? 'MessageSortList' : messageSortFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+    </ui:remove>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>具体消息>></h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="messagessesChildren">
+
+        <h:outputText value="亲！没有与失物类别有关的的信息！您到别处转转."
+                   rendered="#{empty messageSortHome.messagesses}"/>
+
+        <rich:dataTable value="#{messageSortHome.messagesses}"
+                       var="_messagess"
+                  rendered="#{not empty messageSortHome.messagesses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="messagessesTable">
+            <ui:remove>
+            <rich:column sortBy="#{_messagess.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_messagess.id}"/>
+            </rich:column>
+            </ui:remove>
+            
+            <rich:column sortBy="#{_messagess.image}">
+                <f:facet name="header">失物图片</f:facet>
+                <img src="avator.showimg?messagessId=#{_messagess.id}"
+							style="width: 200px; height: 180px" />
+            </rich:column>
+            
+            
+            
+             <rich:column sortBy="#{_messagess.text}">
+                <f:facet name="header">详细消息</f:facet>
+                <h:outputText value="#{_messagess.text}"/>
+            </rich:column>
+            
+            
+            
+           
+            
+            <rich:column sortBy="#{_messagess.palce}">
+                <f:facet name="header">丢捡地点</f:facet>
+                <h:outputText value="#{_messagess.palce}"/>
+            </rich:column>
+            
+            <rich:column sortBy="#{_messagess.type}">
+                <f:facet name="header">消息类型</f:facet>
+                <h:outputText value="#{_messagess.type}"/>
+            </rich:column>
+            
+            
+            
+            <rich:column sortBy="#{_messagess.time}">
+                <f:facet name="header">发布时间</f:facet>
+               <h:outputText value="#{_messagess.time}">
+                            <s:convertDateTime pattern="yyyy-MM-dd HH:mm:ss" type="both"/>
+                </h:outputText>
+            </rich:column>
+           
+            
+            <ui:remove>
+            <rich:column sortBy="#{_messagess.status}">
+                <f:facet name="header">Status</f:facet>
+                <h:outputText value="#{_messagess.status}"/>
+            </rich:column>
+            </ui:remove>
+            
+            <h:column>
+                <f:facet name="header">操作</f:facet>
+                <s:link id="selectmessagess"
+                     value="查看详细信息"
+                      view="/Messagess.xhtml">
+                    <f:param name="messagessId"
+                            value="#{_messagess.id}"/>
+                    <f:param name="messagessFrom" value="MessageSort"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+   <ui:remove>
+    <div class="actionButtons">
+        <s:button
+               value="Add messagess"
+                view="/MessagessEdit.xhtml">
+            <f:param name="messageSortId"
+                    value="#{messageSortHome.instance.id}"/>
+            <f:param name="messagessFrom" value="MessageSort"/>
+        </s:button>
+    </div>
+    </ui:remove>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

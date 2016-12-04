@@ -1,0 +1,313 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="users" styleClass="edit" enctype="multipart/form-data">
+
+        <rich:panel>
+            <f:facet name="header">#{usersHome.managed ? '修改' : 'Add'} 个人资料</f:facet>
+
+              <ui:remove>
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{usersHome.managed}"
+                          value="#{usersHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            </ui:remove>
+
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">姓名：</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="20"
+                      maxlength="20"
+                      disabled="#{usersHome.managed}"
+                          value="#{usersHome.instance.name}"
+                          style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true" />
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="personalNameField" template="layout/edit.xhtml">
+                <ui:define name="label">昵称：</ui:define>
+                <h:inputText id="personalName"          
+                             value="#{usersHome.instance.personalName}" style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="personalNameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="personalSayingField" template="layout/edit.xhtml">
+                <ui:define name="label">个性签名：</ui:define>
+                <h:inputText id="personalSayingName"          
+                             value="#{usersHome.instance.personalSaying}" style="width:200px;height:50px">
+                    <a:support event="onblur" reRender="personalSayingField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="passwordField" template="layout/edit.xhtml">
+                <ui:define name="label">密码：</ui:define>
+                <h:inputText id="password"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{usersHome.instance.password}" style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="passwordField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="phoneNumberField" template="layout/edit.xhtml">
+                <ui:define name="label">手机号：</ui:define>
+                <h:inputText id="phoneNumber"
+                       required="true"
+                           size="11"
+                      maxlength="11"
+                          value="#{usersHome.instance.phoneNumber}" style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="phoneNumberField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="collegeField" template="layout/edit.xhtml">
+                <ui:define name="label">学院：</ui:define>
+                <h:selectOneMenu value="#{usersHome.instance.college}" style="width:200px;height:20px">
+										
+										<c:forEach items="#{collegeList.resultList}" var="_c">
+											<f:selectItem itemValue="#{_c}"
+												itemLabel="#{_c.collegeName}" />
+										</c:forEach>
+										<s:convertEntity></s:convertEntity>
+									</h:selectOneMenu>
+            </s:decorate>
+
+
+            <s:decorate id="professionalField" template="layout/edit.xhtml">
+                <ui:define name="label">专业：</ui:define>
+                <h:inputText id="professional"
+                           size="15"
+                      maxlength="15"
+                          value="#{usersHome.instance.professional}" style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="professionalField" bypassUpdates="true" ajaxSingle="true" />
+                </h:inputText>
+            </s:decorate>
+
+
+            
+            <s:decorate id="userImageField" template="layout/edit.xhtml">
+                <ui:define name="label">用户头像</ui:define>
+                
+               
+                <img src="avator.showing?usersId=#{usersHome.instance.id}"
+										height="50" width="50" id="picture" />
+									<s:fileUpload data="#{usersHome.instance.userImage}"/>
+
+                 
+                
+            </s:decorate>
+          
+         
+
+            <div style="clear:both">
+                带<span class="required">*</span>
+                为必填项
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <ui:remove>
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{usersHome.persist}"
+                       disabled="#{!usersHome.wired}"
+                       rendered="#{!usersHome.managed}"/>
+            </ui:remove>
+
+            <h:commandButton id="update"
+                          value="保存修改"
+                         action="#{usersHome.update}"
+                       rendered="#{usersHome.managed}"/>
+
+
+            <s:button id="cancelEdit"
+                   value="放弃修改"
+             propagation="end"
+                    view="/MainSelfHome.xhtml"
+                rendered="#{usersHome.managed}"
+                >
+              <f:param name="withUserName" value="#{usersList.makeId().name}" />
+                </s:button>
+            
+            <ui:remove>
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty usersFrom ? 'UsersList' : usersFrom}.xhtml"
+                rendered="#{!usersHome.managed}"/>
+             </ui:remove>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+ <ui:remove>
+    <rich:tab label="College *" labelClass="required">
+    <div class="association" id="collegeParent">
+
+        <h:outputText value="There is no college associated with this users."
+                   rendered="#{usersHome.instance.college == null}"/>
+
+        <rich:dataTable var="_college"
+                   value="#{usersHome.instance.college}"
+                rendered="#{usersHome.instance.college != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="collegeTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_college.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">College name</f:facet>
+                <h:outputText value="#{_college.collegeName}" />
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{usersHome.instance.college != null ? 'changeParents' : 'selectParents'}" value="#{usersHome.instance.college != null ? 'Change' : 'Select'} college"
+                       view="/CollegeList.xhtml">
+                <f:param name="from" value="UsersEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+    
+</ui:remove>
+    <rich:tab label="发布的消息">
+        <h:form styleClass="association" id="messagessesChildren">
+
+            <h:outputText value="#{credentials.username},您还没有发布过信息！快来试试吧！."
+                       rendered="#{empty usersHome.messagesses}"/>
+
+            <rich:dataTable value="#{usersHome.messagesses}"
+                           var="_messagess"
+                      rendered="#{not empty usersHome.messagesses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="messagessesTable">
+                            
+                 <ui:remove>
+                <rich:column sortBy="#{_messagess.id}">
+                    <f:facet name="header"></f:facet>
+                    <h:outputText value="#{_messagess.id}"/>
+                </rich:column>
+                </ui:remove>
+                
+                <rich:column sortBy="#{_messagess.messageSort}">
+                    <f:facet name="header">消息类别</f:facet>
+                    <h:outputText value="#{_messagess.messageSort.messort}"/>
+                </rich:column>
+                
+                <rich:column sortBy="#{_messagess.image}">
+                    <f:facet name="header">失物图片</f:facet>
+                    <img src="avator.showimg?messagessId=#{_messagess.id}"
+										height="150" id="picture" />
+                </rich:column>
+                
+                <rich:column sortBy="#{_messagess.text}">
+                    <f:facet name="header">详细信息</f:facet>
+                    <h:outputText value="#{_messagess.text}"/>
+                </rich:column>
+                                
+                <rich:column sortBy="#{_messagess.palce}">
+                    <f:facet name="header">丢捡地点</f:facet>
+                    <h:outputText value="#{_messagess.palce}"/>
+                </rich:column>
+                <rich:column sortBy="#{_messagess.status}">
+                    <f:facet name="header">认领</f:facet>
+                    <h:outputText value="#{_messagess.status}"/>
+                </rich:column>
+                
+                
+                <rich:column sortBy="#{_messagess.type}">
+                    <f:facet name="header">消息类型</f:facet>
+                    <h:outputText value="#{_messagess.type}"/>
+                </rich:column>
+                
+                <rich:column sortBy="#{_messagess.time}">
+                    <f:facet name="header">发布时间</f:facet>
+                    <h:outputText value="#{_messagess.time}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{usersHome.managed}" id="messagesses">
+        <div class="actionButtons">
+            <s:button id="addmessagess"
+                   value="发消息"
+                    view="/MessagessEdit.xhtml"
+             propagation="none">
+                 <f:param name="usersId"
+                         value="#{usersHome.instance.id}"/>
+                 <f:param name="messagessFrom" value="Users"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+<ui:remove>
+    <rich:tab label="Roles *" labelClass="required">
+    <div class="association" id="rolesParent">
+
+        <h:outputText value="There is no roles associated with this users."
+                   rendered="#{usersHome.instance.roles == null}"/>
+
+        <rich:dataTable var="_roles"
+                   value="#{usersHome.instance.roles}"
+                rendered="#{usersHome.instance.roles != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rolesTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_roles.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Role name</f:facet>
+                <h:outputText value="#{_roles.roleName}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{usersHome.instance.roles != null ? 'changeParent' : 'selectParent'}" value="#{usersHome.instance.roles != null ? 'Change' : 'Select'} roles"
+                       view="/RolesList.xhtml">
+                <f:param name="from" value="UsersEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+    </ui:remove>
+    
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

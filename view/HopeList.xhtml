@@ -1,0 +1,140 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="hopeSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Hope Search Filter" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Hope name</ui:define>
+                <h:inputText id="hopeName" value="#{hopeList.hope.hopeName}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Match</ui:define>
+                <h:selectOneRadio id="logic" value="#{hopeList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="All" itemValue="and"/>
+                    <f:selectItem itemLabel="Any" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/HopeList.xhtml"/>
+            <s:button id="reset" value="Reset" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">Hope Search Results (#{empty hopeList.resultList ? 0 : (hopeList.paginated ? hopeList.resultCount : hopeList.resultList.size)})</f:facet>
+    <div class="results" id="hopeList">
+
+    <h:outputText value="The hope search returned no results."
+               rendered="#{empty hopeList.resultList}"/>
+
+    <rich:dataTable id="hopeList"
+                var="_hope"
+              value="#{hopeList.resultList}"
+           rendered="#{not empty hopeList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{hopeList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="hope.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_hope.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{hopeList}"/>
+                    <ui:param name="propertyLabel" value="Hope name"/>
+                    <ui:param name="propertyPath" value="hope.hopeName"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_hope.hopeName}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/#{empty from ? 'Hope' : from}.xhtml"
+                   value="#{empty from ? 'View' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="hopeViewId">
+                <f:param name="hopeId"
+                        value="#{_hope.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/HopeEdit.xhtml"
+                   value="Edit"
+             propagation="none"
+                      id="hopeEdit"
+                rendered="#{empty from}">
+                <f:param name="hopeId"
+                        value="#{_hope.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/HopeList.xhtml"
+            rendered="#{hopeList.previousExists}"
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/HopeList.xhtml"
+            rendered="#{hopeList.previousExists}"
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{hopeList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/HopeList.xhtml"
+            rendered="#{hopeList.nextExists}"
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{hopeList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/HopeList.xhtml"
+            rendered="#{hopeList.nextExists}"
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{hopeList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/HopeEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Create hope">
+            <f:param name="hopeId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

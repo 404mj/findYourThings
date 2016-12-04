@@ -1,0 +1,140 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="messageSortSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="MessageSort Search Filter" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Messort</ui:define>
+                <h:inputText id="messort" value="#{messageSortList.messageSort.messort}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Match</ui:define>
+                <h:selectOneRadio id="logic" value="#{messageSortList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="All" itemValue="and"/>
+                    <f:selectItem itemLabel="Any" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/MessageSortList.xhtml"/>
+            <s:button id="reset" value="Reset" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">MessageSort Search Results (#{empty messageSortList.resultList ? 0 : (messageSortList.paginated ? messageSortList.resultCount : messageSortList.resultList.size)})</f:facet>
+    <div class="results" id="messageSortList">
+
+    <h:outputText value="The messageSort search returned no results."
+               rendered="#{empty messageSortList.resultList}"/>
+
+    <rich:dataTable id="messageSortList"
+                var="_messageSort"
+              value="#{messageSortList.resultList}"
+           rendered="#{not empty messageSortList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{messageSortList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="messageSort.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_messageSort.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{messageSortList}"/>
+                    <ui:param name="propertyLabel" value="Messort"/>
+                    <ui:param name="propertyPath" value="messageSort.messort"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_messageSort.messort}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/#{empty from ? 'MessageSort' : from}.xhtml"
+                   value="#{empty from ? 'View' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="messageSortViewId">
+                <f:param name="messageSortId"
+                        value="#{_messageSort.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/MessageSortEdit.xhtml"
+                   value="Edit"
+             propagation="none"
+                      id="messageSortEdit"
+                rendered="#{empty from}">
+                <f:param name="messageSortId"
+                        value="#{_messageSort.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/MessageSortList.xhtml"
+            rendered="#{messageSortList.previousExists}"
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/MessageSortList.xhtml"
+            rendered="#{messageSortList.previousExists}"
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{messageSortList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/MessageSortList.xhtml"
+            rendered="#{messageSortList.nextExists}"
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{messageSortList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/MessageSortList.xhtml"
+            rendered="#{messageSortList.nextExists}"
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{messageSortList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/MessageSortEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Create messageSort">
+            <f:param name="messageSortId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+
+	<application>
+		<locale-config>
+			<default-locale>en</default-locale>
+			<supported-locale>bg</supported-locale>
+			<supported-locale>de</supported-locale>
+			<supported-locale>en</supported-locale>
+			<supported-locale>fr</supported-locale>
+			<supported-locale>it</supported-locale>
+			<supported-locale>tr</supported-locale>
+		</locale-config>
+		<view-handler>com.sun.facelets.FaceletViewHandler</view-handler>
+	</application>
+
+	<converter>
+		<converter-id>me.lostandfound.util.searchDateConverterBegin</converter-id>
+		<converter-class>me.lostandfound.util.SearchDateConverterBegin</converter-class>
+	</converter>
+
+
+	<converter>
+		<converter-id>me.lostandfound.util.searchDateConverterEnd</converter-id>
+		<converter-class>me.lostandfound.util.SearchDateConverterEnd</converter-class>
+	</converter>
+
+</faces-config>

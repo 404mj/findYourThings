@@ -1,0 +1,131 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="users" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">用户注册</f:facet>
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">用户名：</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="20"
+                      maxlength="20"
+                          value="#{usersHome.instance.name}" style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="passwordField" template="layout/edit.xhtml">
+                <ui:define name="label">密码：</ui:define>
+                <h:inputSecret id="password"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{usersHome.instance.password}" style="width:200px;height:20px">
+                   
+                </h:inputSecret>
+            </s:decorate>
+            
+            <s:decorate id="verifyField" template="layout/edit.xhtml">
+                <ui:define name="label">确认密码：</ui:define>
+                <h:inputSecret id="verify"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{usersHome.verify}" style="width:200px;height:20px">
+                   
+                </h:inputSecret>
+            </s:decorate>
+
+            <s:decorate id="phoneNumberField" template="layout/edit.xhtml">
+                <ui:define name="label">手机号：</ui:define>
+                <h:inputText id="phoneNumber"
+                       required="true"
+                           size="11"
+                      maxlength="11"
+                          value="#{usersHome.instance.phoneNumber}" style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="phoneNumberField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="collegeField" template="layout/edit.xhtml">
+                <ui:define name="label">学院：</ui:define>
+                <h:selectOneMenu value="#{usersHome.instance.college}" style="width:200px;height:20px">
+										
+										<c:forEach items="#{collegeList.resultList}" var="_c">
+											<f:selectItem itemValue="#{_c}"
+												itemLabel="#{_c.collegeName}" />
+										</c:forEach>
+										<s:convertEntity></s:convertEntity>
+									</h:selectOneMenu>
+            </s:decorate>
+
+
+            <s:decorate id="professionalField" template="layout/edit.xhtml">
+                <ui:define name="label">专业：</ui:define>
+                <h:inputText id="professional"
+                           size="15"
+                      maxlength="15"
+                          value="#{usersHome.instance.professional}" style="width:200px;height:20px">
+                    <a:support event="onblur" reRender="professionalField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <ui:remove>
+            <s:decorate id="userImageField" template="layout/edit.xhtml">
+                <ui:define name="label">User image</ui:define>
+                <h:inputText id="userImage"
+                          value="#{usersHome.instance.userImage}">
+                    <a:support event="onblur" reRender="userImageField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            </ui:remove>
+            <ui:remove>
+            <s:decorate id="Studentroles" template="layout/edit.xhtml">
+               <ui:define name="label">我是：</ui:define>
+               <h:selectOneRadio value="#{usersHome.roleId}" label="学生" >
+                  <f:selectItem itemValue="1" itemLabel="学生"/>
+                  </h:selectOneRadio>
+               
+            </s:decorate>
+            </ui:remove>
+
+            <div style="clear:both">
+            带
+                <span class="required">*</span>为
+                必填项
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="注册"
+                         action="#{usersHome.register()}"/>
+
+            <s:button id="cancelAddBeckey"
+                   value="返回"
+             propagation="none"
+                    view="/#{empty usersFrom ? 'UsersList' : usersFrom}.xhtml"
+                rendered="#{!usersHome.managed}"/>
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

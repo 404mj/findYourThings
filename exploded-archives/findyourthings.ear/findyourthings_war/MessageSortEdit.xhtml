@@ -1,0 +1,147 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="messageSort" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{messageSortHome.managed ? 'Edit' : 'Add'} Message sort</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{messageSortHome.managed}"
+                          value="#{messageSortHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="messortField" template="layout/edit.xhtml">
+                <ui:define name="label">Messort</ui:define>
+                <h:inputText id="messort"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{messageSortHome.instance.messort}">
+                    <a:support event="onblur" reRender="messortField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{messageSortHome.persist}"
+                       disabled="#{!messageSortHome.wired}"
+                       rendered="#{!messageSortHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{messageSortHome.update}"
+                       rendered="#{messageSortHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{messageSortHome.remove}"
+                      immediate="true"
+                       rendered="#{messageSortHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/MessageSort.xhtml"
+                rendered="#{messageSortHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty messageSortFrom ? 'MessageSortList' : messageSortFrom}.xhtml"
+                rendered="#{!messageSortHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Messagesses">
+        <h:form styleClass="association" id="messagessesChildren">
+
+            <h:outputText value="There are no messagesses associated with this messageSort."
+                       rendered="#{empty messageSortHome.messagesses}"/>
+
+            <rich:dataTable value="#{messageSortHome.messagesses}"
+                           var="_messagess"
+                      rendered="#{not empty messageSortHome.messagesses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="messagessesTable">
+                <rich:column sortBy="#{_messagess.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_messagess.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_messagess.image}">
+                    <f:facet name="header">Image</f:facet>
+                    <h:outputText value="#{_messagess.image}"/>
+                </rich:column>
+                <rich:column sortBy="#{_messagess.palce}">
+                    <f:facet name="header">Palce</f:facet>
+                    <h:outputText value="#{_messagess.palce}"/>
+                </rich:column>
+                <rich:column sortBy="#{_messagess.status}">
+                    <f:facet name="header">Status</f:facet>
+                    <h:outputText value="#{_messagess.status}"/>
+                </rich:column>
+                <rich:column sortBy="#{_messagess.text}">
+                    <f:facet name="header">Text</f:facet>
+                    <h:outputText value="#{_messagess.text}"/>
+                </rich:column>
+                <rich:column sortBy="#{_messagess.time}">
+                    <f:facet name="header">Time</f:facet>
+                    <h:outputText value="#{_messagess.time}">
+                        <s:convertDateTime type="time"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_messagess.type}">
+                    <f:facet name="header">Type</f:facet>
+                    <h:outputText value="#{_messagess.type}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{messageSortHome.managed}" id="messagesses">
+        <div class="actionButtons">
+            <s:button id="addmessagess"
+                   value="Add messagess"
+                    view="/MessagessEdit.xhtml"
+             propagation="none">
+                 <f:param name="messageSortId"
+                         value="#{messageSortHome.instance.id}"/>
+                 <f:param name="messagessFrom" value="MessageSort"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

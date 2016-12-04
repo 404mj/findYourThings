@@ -1,0 +1,48 @@
+<rich:toolBar xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich">
+	<rich:toolBarGroup>
+		<h:outputText value="#{projectName}:" />
+
+	</rich:toolBarGroup>
+
+	<rich:toolBarGroup>
+		<s:link view="/MessagessList.xhtml" value="首页"
+			includePageParams="false" propagation="none" />
+	</rich:toolBarGroup>
+	<rich:toolBarGroup>
+
+		<s:span style="color:white">-------------------------------------------</s:span>
+		<span id="time"></span>
+
+	</rich:toolBarGroup>
+
+	<!-- @newMenuItem@ -->
+	<rich:toolBarGroup location="right">
+		<s:link view="/MainSelfHome.xhtml"
+			value="进入-#{credentials.username}-空间" rendered="#{identity.loggedIn}">
+			<f:param name="usersId" value="#{usersList.makeId().id}" />
+			<f:param name="withUserName" value="#{usersList.makeId().name}" />
+
+		</s:link>
+
+		<s:link view="/UsersEdit.xhtml" value="个人资料" propagation="none"
+			id="usersEdit" rendered="#{identity.loggedIn}">
+			<f:param name="usersId" value="#{usersList.makeId().id}" />
+		</s:link>
+
+		<s:link view="/register.xhtml" value="注册" propagation="none">
+            <f:param name="Studentroles" value="1"/>
+		</s:link>
+		<s:link id="menuLoginId" view="/login.xhtml" value="登陆"
+			rendered="#{not identity.loggedIn}" propagation="none" />
+		<s:link id="menuLogoutId" view="/home.xhtml"
+			action="#{identity.logout}" value="退出"
+			rendered="#{identity.loggedIn}" propagation="none" />
+
+
+	</rich:toolBarGroup>
+</rich:toolBar>

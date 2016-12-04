@@ -1,0 +1,522 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	 <ui:define name="head">
+    <style>
+       <!-- 
+        .datalist{
+           border:1px solid #0058a3;
+           font-family:Arial;
+           border-collapse:collapse;
+           background-color:white;
+           font-size:14px;
+           
+        }
+        .datalist th{
+           border:1px solid #0058a3;
+           background-color:#4bacff;
+           color:#FFFFFF;
+           font-weight:bold;
+           padding-top:4px;padding-bottom:4px;
+           padding-left:12px;padding-right:12px;
+           text-align:center;
+         
+        }
+        .datalist td{
+           border:1px solid #0058a3;
+           text-align:left;
+           padding-top:4px;padding-bottom:4px;
+           padding-left:10px;padding-right:10px;
+           
+        }
+        .datalist tr:hover,.datalist tr.altrow{
+           background-color:#c4e4ff;
+        }
+        
+       
+        -->
+        </style>
+    </ui:define>
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">详细信息</f:facet>
+			<table width="100%">
+				
+				<tr>
+				<td style="width:60px"><span style="color:green"><b>头像：</b></span></td>
+				<td><img src="avator.showing?usersId=#{messagessHome.instance.users.id}"
+                                        height="100" width="100" id="picture" /></td>
+				
+				<td><span style="color:white">==============================</span></td>
+				<td style="width:60px"><span style="color:green"><b>消息类型：</b></span></td>
+				<td><h:outputText value="#{messagessHome.instance.type}" /></td>
+				</tr>
+				<tr>
+				<td style="width:60px"><span style="color:green"><b>姓名：</b></span></td>
+				<td><h:outputText value="#{messagessHome.instance.users.name}" /></td>
+                <td><span style="color:white">==============================</span></td>
+
+                 <td style="width:60px"><span style="color:green"><b>消息正文：</b></span></td>
+				<td><h:outputText value="#{messagessHome.instance.text}" /></td>
+
+				</tr>
+				<tr>
+				  <td style="width:60px"><span style="color:green"><b>学院：</b></span></td>
+				  <td><h:outputText
+							value="#{messagessHome.instance.users.college.collegeName}" /></td>
+				   <td><span style="color:white">==============================</span></td>
+
+				  <td style="width:60px"><span style="color:green"><b>丢捡地点：</b></span></td>
+				<td><h:outputText value="#{messagessHome.instance.palce}" /></td>
+				</tr>
+				<tr>
+				<td style="width:60px"><span style="color:green"><b>专业：</b></span></td>
+				<td><h:outputText value="#{messagessHome.instance.users.professional}" /></td>
+				 <td><span style="color:white">==============================</span></td>
+				<td style="width:60px"><span style="color:green"><b>消息发布时间：</b></span></td>
+				<td><h:outputText value="#{messagessHome.instance.time}">
+							<s:convertDateTime pattern="yyyy-MM-dd HH:mm:ss" type="both"/>
+						</h:outputText></td>
+				</tr>
+				<tr>
+				<td style="width:60px"><span style="color:green"><b>手机号：</b></span></td>
+				<td><h:outputText value="#{messagessHome.instance.users.phoneNumber}" /></td>
+				<td><span style="color:white">==============================</span></td>
+				<td style="width:60px"><span style="color:green"><b>失物图片：</b></span></td>
+				<td><img src="avator.showimg?messagessId=#{messagessHome.instance.id}"
+							style="width: 170px; height: 60px" /></td>
+				</tr>
+			</table>
+			<ui:remove>
+			<h:panelGrid columns="4">
+				<h:panelGroup>
+					<s:decorate id="usersName" template="layout/display.xhtml">
+						<ui:define name="label">姓名：</ui:define>
+						<h:outputText value="#{messagessHome.instance.users.name}" />
+					</s:decorate>
+
+					<s:decorate id="usersImage" template="layout/display.xhtml">
+						<ui:define name="label">头像：</ui:define>
+						
+						<img src="avator.showing?usersId=#{messagessHome.instance.users.id}"
+                                        height="100" width="100" id="picture" />
+					</s:decorate>
+
+					<s:decorate id="college" template="layout/display.xhtml">
+						<ui:define name="label">学院：</ui:define>
+						<h:outputText
+							value="#{messagessHome.instance.users.college.collegeName}" />
+					</s:decorate>
+
+					<s:decorate id="professional" template="layout/display.xhtml">
+						<ui:define name="label">专业：</ui:define>
+						<h:outputText value="#{messagessHome.instance.users.professional}" />
+					</s:decorate>
+
+					<s:decorate id="phoneNumber" template="layout/display.xhtml">
+						<ui:define name="label">手机号：</ui:define>
+						<h:outputText value="#{messagessHome.instance.users.phoneNumber}" />
+					</s:decorate>
+				</h:panelGroup>
+
+				<h:panelGroup>
+					<span style="color: white">==============================================</span>
+				</h:panelGroup>
+
+				<h:panelGroup>
+
+
+					<ui:remove>
+
+						<s:decorate id="id" template="layout/display.xhtml">
+							<ui:define name="label">Id</ui:define>
+							<h:outputText value="#{messagessHome.instance.id}" />
+						</s:decorate>
+					</ui:remove>
+
+					<s:decorate id="type" template="layout/display.xhtml">
+						<ui:define name="label">消息类型：</ui:define>
+						<h:outputText value="#{messagessHome.instance.type}" />
+					</s:decorate>
+
+					<s:decorate id="text" template="layout/display.xhtml">
+						<ui:define name="label">消息正文：</ui:define>
+						<h:outputText value="#{messagessHome.instance.text}" />
+					</s:decorate>
+
+					<s:decorate id="palce" template="layout/display.xhtml">
+						<ui:define name="label">丢捡地点：</ui:define>
+						<h:outputText value="#{messagessHome.instance.palce}" />
+					</s:decorate>
+
+					<ui:remove>
+						<s:decorate id="status" template="layout/display.xhtml">
+							<ui:define name="label">失物认领：</ui:define>
+							<h:outputText value="#{messagessHome.instance.status}" />
+						</s:decorate>
+					</ui:remove>
+                     
+                    
+					<s:decorate id="time" template="layout/display.xhtml">
+						<ui:define name="label">消息发布时间：</ui:define>
+						<h:outputText value="#{messagessHome.instance.time}">
+							<s:convertDateTime pattern="yyyy-MM-dd HH:mm:ss" type="both"/>
+						</h:outputText>
+					</s:decorate>
+					
+
+					<s:decorate id="image" template="layout/display.xhtml">
+						<ui:define name="label">失物图片：</ui:define>
+						<img src="avator.showimg?messagessId=#{messagessHome.instance.id}"
+							style="width: 170px; height: 60px" />
+						
+					</s:decorate>
+
+
+					<div style="clear: both" />
+				</h:panelGroup>
+
+
+			</h:panelGrid>
+			</ui:remove>
+		</rich:panel>
+
+		<div class="actionButtons">
+
+			<s:button view="/MessagessEdit.xhtml" id="edit" value="编辑修改"
+				rendered="#{messagessHome.instance.users.id==usersList.makeId().id}">
+				<f:param name="messagessId" value="#{messagessHome.instance.id}" />
+				<f:param name="statusEdit" value="未认领" />
+				<f:param name="createDate" value="#{messagessHome.createDate()}"/>
+				</s:button>
+
+			<s:button view="/MainSelfHome.xhtml" id="done" propagation="end"
+				value="完成返回" rendered="#{messagessHome.instance.users.id==usersList.makeId().id}">
+				
+				<f:param name="withUserName" value="#{usersList.makeId().name}"/>
+				</s:button>
+
+		</div>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif"
+							style="vertical-align: middle; padding-right: 4px;" />失物类别</h:panelGroup>
+				</f:facet>
+
+
+				<div class="association" id="messageSortParent">
+
+					<h:outputText value="亲！好像没有该信息的分类！到别处转转吧."
+						rendered="#{messagessHome.instance.messageSort == null}" />
+
+					<rich:dataTable var="_messageSort"
+						value="#{messagessHome.instance.messageSort}"
+						rendered="#{messagessHome.instance.messageSort != null}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="messageSortTable">
+
+						<ui:remove>
+							<h:column>
+								<f:facet name="header">Id</f:facet>
+								<h:outputText value="#{_messageSort.id}" />
+							</h:column>
+						</ui:remove>
+
+						<h:column>
+							<f:facet name="header">失物类别</f:facet>
+							<h:outputText value="#{_messageSort.messort}" />
+						</h:column>
+						<h:column styleClass="action">
+							<f:facet name="header">操作</f:facet>
+							<s:link id="viewmessageSort" value="点击查看所有该类别的信息"
+								view="/MessageSort.xhtml">
+								<f:param name="messageSortId" value="#{_messageSort.id}" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</div>
+			</rich:tab>
+
+			<ui:remove>
+				<rich:tab>
+					<f:facet name="label">
+						<h:panelGroup>
+							<h:graphicImage value="/img/manytoone.gif"
+								style="vertical-align: middle; padding-right: 4px;" />Users</h:panelGroup>
+					</f:facet>
+					<div class="association" id="usersParent">
+
+						<h:outputText value="亲！没有该用户相关的信息！您可以到别别处逛逛"
+							rendered="#{messagessHome.instance.users == null}" />
+                      
+						<rich:dataTable var="_users"
+							value="#{messagessHome.instance.users}"
+							rendered="#{messagessHome.instance.users != null}"
+							rowClasses="rvgRowOne,rvgRowTwo" id="usersTable">
+							<h:column>
+								<f:facet name="header">Id</f:facet>
+								<h:outputText value="#{_users.id}" />
+							</h:column>
+
+							<ui:remove>
+
+								<h:column>
+									<f:facet name="header">College id</f:facet>
+									<h:outputText value="#{_users.college.id}" />
+								</h:column>
+
+							</ui:remove>
+
+
+							<h:column>
+								<f:facet name="header">学院</f:facet>
+								<h:outputText value="#{_users.college.collegeName}" />
+							</h:column>
+
+
+
+
+
+							<h:column>
+								<f:facet name="header">Name</f:facet>
+								<h:outputText value="#{_users.name}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Password</f:facet>
+								<h:outputText value="#{_users.password}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Phone number</f:facet>
+								<h:outputText value="#{_users.phoneNumber}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Professional</f:facet>
+								<h:outputText value="#{_users.professional}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">Roles id</f:facet>
+								<h:outputText value="#{_users.roles.id}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">User image</f:facet>
+								<h:outputText value="#{_users.userImage}" />
+							</h:column>
+							<h:column styleClass="action">
+								<f:facet name="header">Action</f:facet>
+								<s:link id="viewusers" value="View" view="/Users.xhtml">
+									<f:param name="usersId" value="#{_users.id}" />
+								</s:link>
+							</h:column>
+						</rich:dataTable>
+
+					</div>
+				</rich:tab>
+			</ui:remove>
+		</rich:tabPanel>
+
+
+		<ui:remove>
+			<rich:tabPanel switchType="ajax">
+
+				<rich:tab>
+					<f:facet name="label">
+						<h:panelGroup>
+							<h:graphicImage value="/img/manytoone.gif"
+								style="vertical-align: middle; padding-right: 4px;" />给他（她）留言</h:panelGroup>
+					</f:facet>
+
+					<h:form id="comment" styleClass="edit">
+
+						<rich:panel>
+							<f:facet name="header">#{commentHome.managed ? 'Edit' : 'Add'} Comment</f:facet>
+
+
+							<s:decorate id="idField" template="layout/edit.xhtml">
+								<ui:define name="label">Id</ui:define>
+								<h:inputText id="id" required="true"
+									disabled="#{commentHome.managed}"
+									value="#{commentHome.instance.id}">
+									<a:support event="onblur" reRender="idField"
+										bypassUpdates="true" ajaxSingle="true" />
+								</h:inputText>
+							</s:decorate>
+
+
+							<s:decorate id="commentContentField" template="layout/edit.xhtml">
+								<ui:define name="label">Comment content</ui:define>
+								<h:inputTextarea id="commentContent" cols="80" rows="3"
+									value="#{commentHome.instance.commentContent}" />
+							</s:decorate>
+
+
+
+							<s:decorate id="showContentField" template="layout/edit.xhtml">
+								<ui:define name="label">Show content</ui:define>
+								<h:selectBooleanCheckbox id="showContent"
+									value="#{commentHome.instance.showContent}" />
+							</s:decorate>
+
+							<div style="clear: both">
+								<span class="required">*</span> required fields
+							</div>
+
+						</rich:panel>
+
+						<div class="actionButtons">
+
+							<h:commandButton id="save" value="Save"
+								action="#{commentHome.persist}" />
+
+							<s:button value="Save" view="/Messagess.xhtml"
+								action="#{commentHome.persist}" propagation="end" />
+
+
+
+
+
+
+							<s:button id="cancelEdit" value="Cancel" propagation="end"
+								view="/Messagess.xhtml" />
+
+						</div>
+					</h:form>
+
+				</rich:tab>
+			</rich:tabPanel>
+		</ui:remove>
+
+        <ui:remove>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />用户评论</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="commentsChildren">
+
+					<h:outputText
+						value="There are no comments associated with this messagess."
+						rendered="#{empty messagessHome.comments}" />
+
+					<rich:dataTable value="#{messagessHome.comments}" var="_comment"
+						rendered="#{not empty messagessHome.comments}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="commentsTable">
+						<rich:column sortBy="#{_comment.id}">
+							<f:facet name="header">id</f:facet>
+							<h:outputText value="#{_comment.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_comment.commentContent}">
+							<f:facet name="header">评论内容</f:facet>
+							<h:outputText value="#{_comment.commentContent}" />
+						</rich:column>
+						<ui:remove>
+						<rich:column sortBy="#{_comment.showContent}">
+							<f:facet name="header">Show content</f:facet>
+							<h:outputText value="#{_comment.showContent}" />
+						</rich:column>
+						</ui:remove>
+						
+						
+						<h:column rendered="#{usersHome.managed}">
+							<f:facet name="header">操作</f:facet>
+							<ui:remove>
+							<s:link id="selectcomment" value="Select" view="/Comment.xhtml">
+								<f:param name="commentId" value="#{_comment.id}" />
+								<f:param name="commentFrom" value="Messagess" />
+							</s:link>
+							</ui:remove>
+							
+					<s:link view="/Messagess.xhtml"  value="删除" action="#{commentList.removedComents()}">
+                    <f:param name="commentsId" value="#{_comment.id}"/>
+                    </s:link>
+		
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons">
+					<ui:remove>
+						<s:button value="Add comment" view="/CommentEdit.xhtml">
+							<f:param name="messagessId" value="#{messagessHome.instance.id}" />
+							<f:param name="commentFrom" value="Messagess" />
+						</s:button>
+					</ui:remove>
+					<s:button id="addmessagess" value="发评论" view="/CommentEdit.xhtml">
+
+
+					</s:button>
+				</div>
+			</rich:tab>
+		</rich:tabPanel>
+		</ui:remove>
+		
+		 <s:div><p>用户评论</p> </s:div>   
+		 <rich:tabPanel switchType="ajax">    
+        
+        <rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />用户评论</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="commentsChildren">
+				<h:outputText
+						value="亲！还没有人留言，快留下你的足迹吧！."
+						rendered="#{empty messagessHome.comments}" />
+           
+           <table class="datalist" width="100%">
+             <tr>
+                       <th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{commentList}" />
+								<ui:param name="propertyLabel" value="Id" />
+								<ui:param name="propertyPath" value="comment.id" />
+							</ui:include></th>
+                       <th><ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{commentList}" />
+								<ui:param name="propertyLabel" value="评论内容" />
+								<ui:param name="propertyPath" value="comment.commentContent" /></ui:include></th>
+                      <s:fragment rendered="#{messagessHome.instance.users.id==usersList.makeId().id}">
+                       <th>操作</th>
+                       </s:fragment>
+              </tr>
+              <ui:repeat var="_comment" value="#{messagessHome.comments}">
+              <s:fragment rendered="#{!_comment.showContent}">             
+              <tr>
+                 <td><h:outputText value="#{_comment.id}" /></td>
+                 <td><h:outputText value="#{_comment.commentContent}" /></td>
+                  <s:fragment rendered="#{messagessHome.instance.users.id==usersList.makeId().id}">
+                 <td><s:link view="/Messagess.xhtml"  value="删除" action="#{commentList.removedComents()}">
+                    <f:param name="commentsId" value="#{_comment.id}"/>
+                 </s:link>
+                 </td>
+                 </s:fragment>
+                 
+              </tr> 
+              </s:fragment>
+              
+              </ui:repeat>   
+                    
+              </table>
+             </h:form>
+             <s:button id="addmessagess" value="发评论" view="/CommentEdit.xhtml"></s:button>
+             </rich:tab>
+             </rich:tabPanel>
+            </ui:define>
+
+</ui:composition>

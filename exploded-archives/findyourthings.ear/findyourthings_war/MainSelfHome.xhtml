@@ -1,0 +1,481 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	<ui:define name="head">
+		<style>
+<!--
+.datalist {
+	border: 1px solid #0058a3;
+	font-family: Arial;
+	border-collapse: collapse;
+	background-color: white;
+	font-size: 14px;
+}
+
+.datalist th {
+	border: 1px solid #0058a3;
+	background-color: #4bacff;
+	color: #FFFFFF;
+	font-weight: bold;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 12px;
+	padding-right: 12px;
+	text-align: center;
+}
+
+.datalist td {
+	border: 1px solid #0058a3;
+	text-align: left;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.datalist tr:hover,.datalist tr.altrow {
+	background-color: #c4e4ff;
+}
+-->
+</style>
+	</ui:define>
+
+	<ui:define name="body">
+		<rich:panel>
+			<h:panelGrid columns="2">
+				<ui:remove><h:graphicImage value="/img/seamlogo.png" alt="Seam logo" /></ui:remove>>
+				 <img src="avator.showing?usersId=#{usersHome.instance.id}"
+                                        height="190" width="190" id="picture" />
+				
+				<s:div styleClass="info">
+					<p>
+						<span style="font-size: 25pt"><strong>#{usersHome.instance.personalName}</strong></span><span style="color:white">-------</span>#{usersHome.instance.personalSaying}
+					</p>
+
+				</s:div>
+			</h:panelGrid>
+
+		</rich:panel>
+
+		<s:div>
+			<p>寻宝贝</p>
+		</s:div>
+
+		<rich:panel>
+
+			<rich:tabPanel switchType="ajax">
+
+				<rich:tab label="已发布的消息">
+					<h:form styleClass="association" id="messagessesChildren">
+
+						<h:outputText value="抱歉亲！您还没有发布过任何失物招领信息，赶快发布吧，让我们一起去寻找."
+							rendered="#{empty usersHome.messagesses}" />
+
+						<rich:dataTable value="#{usersHome.messagesses}" var="_messagess"
+							rendered="#{not empty usersHome.messagesses}"
+							rowClasses="rvgRowOne,rvgRowTwo" id="messagessesTable">
+							<rich:column sortBy="#{_messagess.id}">
+							<table width="15px">
+							<tr><td><f:facet name="header">编号</f:facet></td></tr>
+							<tr><td><h:outputText value="#{_messagess.id}" /></td></tr>
+							</table>
+								
+								
+							</rich:column>
+							<rich:column sortBy="#{_messagess.image}">
+								<f:facet name="header">失物图片</f:facet>
+								<img src="avator.showimg?messagessId=#{_messagess.id}"
+										height="150" id="picture" />
+							</rich:column>
+							<rich:column sortBy="#{_messagess.palce}">
+								<f:facet name="header">丢捡地点</f:facet>
+								<h:outputText value="#{_messagess.palce}" />
+							</rich:column>
+							<rich:column sortBy="#{_messagess.status}">
+								<f:facet name="header">招领状态</f:facet>
+								<h:outputText value="#{_messagess.status}" />
+							</rich:column>
+
+							<ui:remove>
+								<rich:column sortBy="#{_messagess.text}">
+									<f:facet name="header">详细信息</f:facet>
+									<h:outputText value="#{_messagess.text}" />
+								</rich:column>
+							</ui:remove>
+
+
+							<rich:column sortBy="#{_messagess.text}">
+								<f:facet name="header">详细信息</f:facet>
+								<s:link view="/Messagess.xhtml" value="#{_messagess.text}"
+									id="messagessViewId" propagation="none">
+
+									<f:param name="messagessId" value="#{_messagess.id}" />
+
+								</s:link>
+
+							</rich:column>
+                           
+
+							<rich:column sortBy="#{_messagess.time}">
+								<f:facet name="header">发布时间</f:facet>
+								<h:outputText value="#{_messagess.time}">
+							<s:convertDateTime pattern="yyyy-MM-dd HH:mm:ss" type="both"/>
+						</h:outputText>
+							</rich:column>
+
+							
+							
+							<rich:column sortBy="#{_messagess.type}">
+								<f:facet name="header">消息类型</f:facet>
+								<h:outputText value="#{_messagess.type}" />
+							</rich:column>
+
+							<h:column>
+								<f:facet name="header">操作</f:facet>
+								<table width="50px">
+								<tr>
+									<td><s:link view="/MessagessEdit.xhtml" value="编辑">
+									<f:param name="messagessId" value="#{_messagess.id}" />
+									<f:param name="statusEdit" value="未认领" />
+									<f:param name="createDate" value="#{messagessHome.createDate()}"/>
+									</s:link></td>
+									
+								</tr>
+								<tr><td><s:link view="/MainSelfHome.xhtml" value="删除"
+									action="#{messagessList.removedMessagess()}" propagation="none">
+									<f:param name="messagessId" value="#{_messagess.id}" />
+								</s:link></td></tr>
+								<tr><td><s:link view="/MainSelfHome.xhtml" value="已认领"
+									action="#{messagessList.updateStatus()}">
+									<f:param name="status" value="已认领" />
+									<f:param name="messagessId" value="#{_messagess.id}" />
+								</s:link></td></tr>
+								</table>
+
+								
+
+								
+								
+
+								<ui:remove>
+									<h:commandLink value="删除" action="#{messagessHome.remove()}" />
+								</ui:remove>
+							</h:column>
+
+
+
+						</rich:dataTable>
+
+					</h:form>
+
+					<f:subview id="messagesses">
+						<div class="actionButtons">
+							<s:button id="addmessagess" value="发消息"
+								view="/MessagessEdit.xhtml" propagation="none">
+								<f:param name="statusAdd" value="未认领" />
+								<f:param name="createDate" value="#{messagessHome.createDate()}"/>
+
+							</s:button>
+						</div>
+					</f:subview>
+				</rich:tab>
+			</rich:tabPanel>
+		</rich:panel>
+
+		<ui:remove>
+			<s:div>
+				<p>留言列表</p>
+			</s:div>
+
+			<rich:panel>
+
+				<rich:tabPanel switchType="ajax">
+
+					<rich:tab label="用户给你留言">
+						<h:form styleClass="association" id="visitorBooksChildren">
+
+							<h:outputText value="抱歉亲！用户没有给您留过言，耐心等待一下吧！"
+								rendered="#{empty usersHome.visitorBooks}" />
+
+							<rich:dataTable value="#{usersHome.visitorBooks}"
+								var="_visitorBooks"
+								rendered="#{not empty usersHome.visitorBooks}"
+								rowClasses="rvgRowOne,rvgRowTwo" id="visitorBooksTable">
+								<rich:column sortBy="#{_visitorBooks.id}">
+									<f:facet name="header">留言编号</f:facet>
+									<h:outputText value="#{_visitorBooks.id}" />
+								</rich:column>
+
+								<rich:column sortBy="#{_visitorBooks.liuYanUserName}">
+									<f:facet name="header">留言人姓名</f:facet>
+									<h:outputText value="#{_visitorBooks.liuYanUserName}" />
+								</rich:column>
+
+								<rich:column sortBy="#{_visitorBooks.xueYuan}">
+									<f:facet name="header">所在学院</f:facet>
+									<h:outputText value="#{_visitorBooks.xueYuan}" />
+								</rich:column>
+
+								<rich:column sortBy="#{_visitorBooks.shoujihao}">
+									<f:facet name="header">手机号：</f:facet>
+									<h:outputText value="#{_visitorBooks.shoujihao}" />
+								</rich:column>
+
+								<rich:column sortBy="#{_visitorBooks.leaveMessage}">
+									<f:facet name="header">留言内容</f:facet>
+									<s:link view="/VisitorBook.xhtml"
+										value="#{_visitorBooks.leaveMessage}" id="visitorBookEditId">
+
+										<f:param name="visitorBooksId"
+											value="#{visitorBookList.visitorBookId}" />
+									</s:link>
+								</rich:column>
+
+
+
+
+								<h:column>
+									<f:facet name="header">操作</f:facet>
+
+
+									<s:link view="/MainSelfHome.xhtml" value="删除"
+										action="#{visitorBookList.removedVisitorBook()}">
+										<f:param name="visitorBooksId" value="#{_visitorBooks.id}" />
+									</s:link>
+
+									<ui:remove>
+										<s:link view="/MainSelfHome.xhtml" value="已认领"
+											action="#{messagessList.updateStatus()}">
+											<f:param name="status" value="已认领" />
+											<f:param name="messagessId" value="#{_messagess.id}" />
+										</s:link>
+									</ui:remove>
+
+									<ui:remove>
+										<h:commandLink value="删除" action="#{messagessHome.remove()}" />
+									</ui:remove>
+								</h:column>
+
+
+
+							</rich:dataTable>
+
+						</h:form>
+
+
+					</rich:tab>
+				</rich:tabPanel>
+			</rich:panel>
+		</ui:remove>
+
+
+		<s:div>
+			<p>留言列表</p>
+		</s:div>
+
+		<rich:panel>
+
+			<rich:tabPanel switchType="ajax">
+
+				<rich:tab label="用户给你留言">
+					<h:form styleClass="association" id="visitorBooksChildren">
+
+						<table class="datalist" width="100%">
+							<tr>
+								<th><ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{commentList}" />
+										<ui:param name="propertyLabel" value="Id" />
+										<ui:param name="propertyPath" value="comment.id" />
+									</ui:include></th>
+								<th><ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{commentList}" />
+										<ui:param name="propertyLabel" value="用户留言" />
+										<ui:param name="propertyPath" value="comment.commentContent" />
+									</ui:include></th>
+								<th>操作</th>
+
+							</tr>
+
+							<ui:repeat var="_message" value="#{usersHome.messagesses}">
+
+								<ui:repeat var="_comment" value="#{_message.comments.toArray()}">
+									<s:fragment rendered="#{empty _message.comments.toArray()}">
+										<tr>
+											<td><h:outputText value="抱歉亲！用户没有给您留过言，耐心等待一下吧！" /></td>
+										</tr>
+									</s:fragment>
+									<s:fragment rendered="#{_comment.showContent}">
+										<tr>
+											<td><h:outputText value="#{_comment.id}" /></td>
+											<td><h:outputText value="#{_comment.commentContent}" /></td>
+											<td><s:link view="/MainSelfHome.xhtml" value="删除"
+													action="#{commentList.removedComents()}">
+													<f:param name="commentsId" value="#{_comment.id}" />
+												</s:link></td>
+										</tr>
+									</s:fragment>
+
+								</ui:repeat>
+							</ui:repeat>
+						</table>
+
+
+
+					</h:form>
+				</rich:tab>
+			</rich:tabPanel>
+		</rich:panel>
+
+
+		<s:div>
+			<p>提到我的信息</p>
+		</s:div>
+
+		<rich:panel>
+
+			<rich:tabPanel switchType="ajax">
+
+				<rich:tab label="提到我的消息">
+					<h:form styleClass="association" id="withMemessagessesChildren">
+
+						<h:outputText value="抱歉亲！还没有任何提到你的失物招领信息，再等等吧，会找到的."
+							rendered="#{empty messagessList.findMessagess()}" />
+
+						<rich:dataTable value="#{messagessList.findMessagess()}"
+							var="_withMemessagess"
+							rendered="#{not empty messagessList.findMessagess()}"
+							rowClasses="rvgRowOne,rvgRowTwo" id="withMemessagessesTable">
+							<rich:column sortBy="#{_withMemessagess.id}">
+								<f:facet name="header">信息编号</f:facet>
+								<h:outputText value="#{_withMemessagess.id}" />
+							</rich:column>
+							<rich:column sortBy="#{_withMemessagess.image}">
+								<f:facet name="header">失物图片</f:facet>
+								<img src="avator.showimg?messagessId=#{_withMemessagess.id}"
+										height="150" id="picture" />
+							</rich:column>
+							<rich:column sortBy="#{_withMemessagess.palce}">
+								<f:facet name="header">丢捡地点</f:facet>
+								<h:outputText value="#{_withMemessagess.palce}" />
+							</rich:column>
+							<rich:column sortBy="#{_withMemessagess.status}">
+								<f:facet name="header">招领状态</f:facet>
+								<h:outputText value="#{_withMemessagess.status}" />
+							</rich:column>
+							<rich:column sortBy="#{_withMemessagess.text}">
+								<f:facet name="header">详细信息</f:facet>
+								<s:link view="/Messagess.xhtml" value="#{_withMemessagess.text}"
+									id="withMessagessId" propagation="none">
+
+									<f:param name="messagessId" value="#{_withMemessagess.id}" />
+
+								</s:link>
+
+							</rich:column>
+
+							<rich:column sortBy="#{_withMemessagess.type}">
+								<f:facet name="header">消息类型</f:facet>
+								<h:outputText value="#{_withMemessagess.type}" />
+							</rich:column>
+							<ui:remove>
+							<rich:column sortBy="#{_withMemessagess.time}">
+								<f:facet name="header">发布时间</f:facet>
+								<h:outputText value="#{_withMemessagess.time}">
+									<s:convertDateTime type="time" />
+								</h:outputText>
+							</rich:column>
+							</ui:remove>
+
+							<ui:remove>
+								<h:column>
+									<f:facet name="header">操作</f:facet>
+
+									<s:link view="/MessagessEdit.xhtml" value="编辑">
+										<f:param name="messagessId" value="#{_messagess.id}" />
+										<f:param name="statusEdit" value="未认领" />
+
+									</s:link>
+
+									<s:link view="/MainSelfHome.xhtml" value="删除"
+										action="#{messagessList.removedMessagess()}">
+										<f:param name="messagessId" value="#{_messagess.id}" />
+									</s:link>
+
+									<s:link view="/MainSelfHome.xhtml" value="已认领"
+										action="#{messagessList.updateStatus()}">
+										<f:param name="status" value="已认领" />
+										<f:param name="messagessId" value="#{_messagess.id}" />
+									</s:link>
+
+
+									<h:commandLink value="删除" action="#{messagessHome.remove()}" />
+
+								</h:column>
+							</ui:remove>
+
+
+						</rich:dataTable>
+
+					</h:form>
+
+				</rich:tab>
+			</rich:tabPanel>
+		</rich:panel>
+
+		<s:div>
+			<p>分类查看</p>
+		</s:div>
+		<rich:panel>
+			<f:facet name="header">失物类别分类查询表 (#{empty messageSortList.resultList ? 0 : (messageSortList.paginated ? messageSortList.resultCount : messageSortList.resultList.size)})</f:facet>
+			<div class="results" id="messageSortList">
+
+				<h:outputText value="亲！失物类别中还没有东西！转转别的吧！."
+					rendered="#{empty messageSortList.resultList}" />
+
+				<rich:dataTable id="messageSortList" var="_messageSort"
+					value="#{messageSortList.resultList}"
+					rendered="#{not empty messageSortList.resultList}">
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messageSortList}" />
+								<ui:param name="propertyLabel" value="Id" />
+								<ui:param name="propertyPath" value="messageSort.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_messageSort.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{messageSortList}" />
+								<ui:param name="propertyLabel" value="失物类别" />
+								<ui:param name="propertyPath" value="messageSort.messort" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_messageSort.messort}" />
+					</h:column>
+					<rich:column styleClass="action">
+						<f:facet name="header">操作</f:facet>
+						<s:link view="/#{empty from ? 'MessageSort' : from}.xhtml"
+							value="查看" propagation="#{empty from ? 'none' : 'default'}"
+							id="messageSortViewId">
+							<f:param name="messageSortId" value="#{_messageSort.id}" />
+						</s:link>
+            #{' '}
+        </rich:column>
+				</rich:dataTable>
+
+			</div>
+		</rich:panel>
+
+
+
+
+	</ui:define>
+</ui:composition>
